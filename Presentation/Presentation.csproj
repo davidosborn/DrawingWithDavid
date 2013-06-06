@@ -80,11 +80,11 @@
     <Compile Include="Tools\ColorStateBox.Designer.cs">
       <DependentUpon>ColorStateBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bases\DockingContainerControl.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Bases\DockingContainerForm.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bases\DockingContainerControl.Designer.cs">
-      <DependentUpon>DockingContainerControl.cs</DependentUpon>
+    <Compile Include="Bases\DockingContainerForm.Designer.cs">
+      <DependentUpon>DockingContainerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\HistoryBox.cs">
       <SubType>Form</SubType>

@@ -1,6 +1,6 @@
 ﻿namespace DrawingWithDavid.Presentation
 {
-	partial class DockingContainerControl
+	partial class DockingContainerForm
 	{
 		/// <summary> 
 		/// Required designer variable.

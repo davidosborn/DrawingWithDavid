@@ -7,6 +7,12 @@ namespace DrawingWithDavid.Presentation
 		public DockableForm()
 		{
 			InitializeComponent();
+
+			Move += delegate
+			{
+				DockingContainerForm parent = ((DockingContainerForm)MdiParent);
+				parent.TryToDock(this);
+			};
 		}
 	}
 }

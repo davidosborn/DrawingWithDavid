@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DrawingWithDavid.Presentation
@@ -13,12 +7,12 @@ namespace DrawingWithDavid.Presentation
 	/**
 	 * A container for dockable forms.
 	 */
-	public partial class DockingContainerControl : UserControl
+	public partial class DockingContainerForm : Form
 	{
 		/**
 		 * 
 		 */
-		private static double SNAP_THRESHOLD = 50;
+		private static double SNAP_THRESHOLD = 100;
 
 		/**
 		 * 
@@ -33,15 +27,23 @@ namespace DrawingWithDavid.Presentation
 		/**
 		 * Constructor.
 		 */
-		public DockingContainerControl()
+		public DockingContainerForm()
 		{
 			InitializeComponent();
+		}
 
+		/**
+		 * Initializes the docking area.
+		 * 
+		 * @note This function must be called by the derived class.
+		 */
+		protected void UpdateDockingBounds(Rectangle rect)
+		{
 			anchors = new List<Point>{
-				new Point(ClientRectangle.Left,  ClientRectangle.Top),
-				new Point(ClientRectangle.Left,  ClientRectangle.Bottom),
-				new Point(ClientRectangle.Right, ClientRectangle.Top),
-				new Point(ClientRectangle.Right, ClientRectangle.Bottom)};
+				new Point(rect.Left,  rect.Top),
+				new Point(rect.Left,  rect.Bottom),
+				new Point(rect.Right, rect.Top),
+				new Point(rect.Right, rect.Bottom)};
 		}
 
 		/**

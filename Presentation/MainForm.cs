@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace DrawingWithDavid.Presentation
 {
-	public partial class MainForm : Form
+	public partial class MainForm : DockingContainerForm
 	{
-		private List<Form> toolForms = new List<Form>();
+		private List<DockableForm> toolForms = new List<DockableForm>();
 		private List<CanvasBox> canvasBoxes = new List<CanvasBox>();
-		private DockingContainerControl dockingContainer;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,12 +15,12 @@ namespace DrawingWithDavid.Presentation
 		{
 			InitializeComponent();
 
-			dockingContainer = new DockingContainerControl();
-			dockingContainer.BackColor = System.Drawing.Color.AliceBlue;
-			dockingContainer.Bounds = ClientRectangle;
-			dockingContainer.Top += uxMenuStrip.Height;
-			dockingContainer.Height -= uxStatusStrip.Height;
-			this.Controls.Add(dockingContainer);
+			Resize += delegate
+			{
+				Rectangle dockingRect = ClientRectangle;
+				dockingRect.Height -= uxMenuStrip.Height + uxStatusStrip.Height + 4;
+				UpdateDockingBounds(dockingRect);
+			};
 		}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,8 +56,8 @@ namespace DrawingWithDavid.Presentation
 		{
 			T toolForm = new T();
 			toolForms.Add(toolForm);
-			toolForm.MdiParent = this;
-			toolForm.Show();
+			toolForm.ShowInTaskbar = false;
+			toolForm.Show(uxWorkspace);
 		}
 	}
 }
