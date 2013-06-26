@@ -12,12 +12,7 @@ namespace DrawingWithDavid.Presentation
 		/**
 		 * 
 		 */
-		private static double SNAP_THRESHOLD = 100;
-
-		/**
-		 * 
-		 */
-		private List<Form> dockedForms;
+		private List<DockableForm> dockedForms;
 
 		/**
 		 * 
@@ -37,50 +32,96 @@ namespace DrawingWithDavid.Presentation
 		 * 
 		 * @note This function must be called by the derived class.
 		 */
-		protected void UpdateDockingBounds(Rectangle rect)
+		protected void UpdateWorkspaceRectangle(Rectangle rect)
 		{
-			anchors = new List<Point>{
-				new Point(rect.Left,  rect.Top),
-				new Point(rect.Left,  rect.Bottom),
-				new Point(rect.Right, rect.Top),
-				new Point(rect.Right, rect.Bottom)};
+			uxWorkspace.Bounds = rect;
 		}
 
 		/**
 		 * Attempts to dock the specified form within the container.
 		 */
-		public void TryToDock(Form form)
+		public void TryToDock(DockableForm form, SideFlags sides, bool resize)
 		{
-			List<Point> corners = new List<Point>{
-				new Point(form.Bounds.Left,  form.Bounds.Top),
-				new Point(form.Bounds.Left,  form.Bounds.Bottom),
-				new Point(form.Bounds.Right, form.Bounds.Top),
-				new Point(form.Bounds.Right, form.Bounds.Bottom)};
+			var docks = new List<Rectangle>();
+			
+			// consider the edges of the workspace
+			docks.Add(RectangleToScreen(uxWorkspace.Bounds));
+			
+			// consider other docked forms
+			foreach (var dockedForm in dockedForms)
+				docks.Add(new Rectangle(
+					dockedForm.Bounds.Right,
+					dockedForm.Bounds.Bottom,
+					dockedForm.Bounds.Left,
+					dockedForm.Bounds.Top));
 
-			int closestAnchor = -1;
-			int closestCorner;
-			Point closestDiff = default(Point);
-			double distanceBetweenClosestAnchorAndCorner = double.PositiveInfinity;
+			var distancePerSide = new int[4]{0, 0, 0, 0};
 
-			for (int j = 0; j < anchors.Count; ++j)
-				for (int i = 0; i < corners.Count; ++i)
-				{
-					Point diff = Point.Subtract(anchors[i], new Size(corners[j]));
-					double distance = System.Math.Sqrt(diff.X * diff.X + diff.Y * diff.Y);
-					if (distance < SNAP_THRESHOLD &&
-						distance < distanceBetweenClosestAnchorAndCorner)
-					{
-						closestAnchor = i;
-						closestCorner = j;
-						distanceBetweenClosestAnchorAndCorner = distance;
-						closestDiff = diff;
-					}
-				}
-
-			if (closestAnchor != -1)
+			if ((sides & SideFlags.Left) != SideFlags.None)
 			{
-				form.Location = Point.Add(form.Location, new Size(closestDiff));
+				int minDistance = 0;
+				foreach (var dock in docks)
+				{
+					int distance = dock.Left - form.Bounds.Left;
+					if (System.Math.Abs(distance) <= Config.DockSnapThreshold)
+						minDistance = Math.AbsMinNotZero(minDistance, distance);
+				}
+				distancePerSide[(int)Side.Left] = minDistance;
 			}
+
+			if ((sides & SideFlags.Top) != SideFlags.None)
+			{
+				int minDistance = 0;
+				foreach (var dock in docks)
+				{
+					int distance = dock.Top - form.Bounds.Top;
+					if (System.Math.Abs(distance) <= Config.DockSnapThreshold)
+						minDistance = Math.AbsMinNotZero(minDistance, distance);
+				}
+				distancePerSide[(int)Side.Top] = minDistance;
+			}
+
+			if ((sides & SideFlags.Right) != SideFlags.None)
+			{
+				int minDistance = 0;
+				foreach (var dock in docks)
+				{
+					int distance = dock.Right - form.Bounds.Right;
+					if (System.Math.Abs(distance) <= Config.DockSnapThreshold)
+						minDistance = Math.AbsMinNotZero(minDistance, distance);
+				}
+				distancePerSide[(int)Side.Right] = minDistance;
+			}
+
+			if ((sides & SideFlags.Bottom) != SideFlags.None)
+			{
+				int minDistance = 0;
+				foreach (var dock in docks)
+				{
+					int distance = dock.Bottom - form.Bounds.Bottom;
+					if (System.Math.Abs(distance) <= Config.DockSnapThreshold)
+						minDistance = Math.AbsMinNotZero(minDistance, distance);
+				}
+				distancePerSide[(int)Side.Bottom] = minDistance;
+			}
+
+			if (resize)
+			{
+				var newBounds = form.Bounds;
+				newBounds.X      -= distancePerSide[(int)Side.Left];
+				newBounds.Y      -= distancePerSide[(int)Side.Top];
+				newBounds.Width  += distancePerSide[(int)Side.Right];
+				newBounds.Height += distancePerSide[(int)Side.Bottom];
+				form.Bounds = newBounds;
+			}
+			else
+				form.Bounds.Offset(
+					Math.AbsMinNotZero(
+						distancePerSide[(int)Side.Left],
+						distancePerSide[(int)Side.Right]),
+					Math.AbsMinNotZero(
+						distancePerSide[(int)Side.Top],
+						distancePerSide[(int)Side.Bottom]));
 		}
 	}
 }

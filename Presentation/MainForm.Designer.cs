@@ -44,7 +44,6 @@
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.uxStatusStrip = new System.Windows.Forms.StatusStrip();
 			this.uxStatus = new System.Windows.Forms.ToolStripStatusLabel();
-			this.uxWorkspace = new System.Windows.Forms.Panel();
 			this.uxMenuStrip.SuspendLayout();
 			this.uxStatusStrip.SuspendLayout();
 			this.SuspendLayout();
@@ -173,20 +172,11 @@
 			this.uxStatus.Size = new System.Drawing.Size(54, 17);
 			this.uxStatus.Text = "Welcome!";
 			// 
-			// uxWorkspace
-			// 
-			this.uxWorkspace.BackColor = System.Drawing.SystemColors.AppWorkspace;
-			this.uxWorkspace.Location = new System.Drawing.Point(0, 24);
-			this.uxWorkspace.Name = "uxWorkspace";
-			this.uxWorkspace.Size = new System.Drawing.Size(292, 227);
-			this.uxWorkspace.TabIndex = 4;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(292, 273);
-			this.Controls.Add(this.uxWorkspace);
 			this.Controls.Add(this.uxStatusStrip);
 			this.Controls.Add(this.uxMenuStrip);
 			this.MainMenuStrip = this.uxMenuStrip;
@@ -220,7 +210,6 @@
 		private System.Windows.Forms.ToolStripMenuItem zoomToolStripMenuItem;
 		private System.Windows.Forms.StatusStrip uxStatusStrip;
 		private System.Windows.Forms.ToolStripStatusLabel uxStatus;
-		private System.Windows.Forms.Panel uxWorkspace;
 	}
 }
 

@@ -15,12 +15,27 @@ namespace DrawingWithDavid.Presentation
 		{
 			InitializeComponent();
 
-			Resize += delegate
+			// bind events for updating workspace rectangle
+			EventHandler updateWorkspaceRectangle = delegate
 			{
-				Rectangle dockingRect = ClientRectangle;
-				dockingRect.Height -= uxMenuStrip.Height + uxStatusStrip.Height + 4;
-				UpdateDockingBounds(dockingRect);
+				UpdateWorkspaceRectangle();
 			};
+			Load   += updateWorkspaceRectangle;
+			Resize += updateWorkspaceRectangle;
+		}
+
+////////////////////////////////////////////////////////////////////////////////
+
+		/**
+		 * Resize workspace to fill client rectangle.
+		 */
+		private void UpdateWorkspaceRectangle()
+		{
+			Rectangle wsRect = ClientRectangle;
+			wsRect.Y += uxMenuStrip.Height;
+			wsRect.Height -= uxMenuStrip.Height;
+			wsRect.Height -= uxStatusStrip.Height;
+			UpdateWorkspaceRectangle(wsRect);
 		}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +72,7 @@ namespace DrawingWithDavid.Presentation
 			T toolForm = new T();
 			toolForms.Add(toolForm);
 			toolForm.ShowInTaskbar = false;
-			toolForm.Show(uxWorkspace);
+			toolForm.Show(this);
 		}
 	}
 }

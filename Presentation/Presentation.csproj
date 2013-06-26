@@ -56,6 +56,11 @@
     <Compile Include="Dialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Types\Config.cs" />
+    <Compile Include="Types\DockAnchor.cs" />
+    <Compile Include="Types\DockAnchors.cs" />
+    <Compile Include="Types\Math.cs" />
+    <Compile Include="Types\Side.cs" />
     <Compile Include="Tools\CanvasBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +112,9 @@
     </Compile>
     <EmbeddedResource Include="Bases\DockableForm.resx">
       <DependentUpon>DockableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Bases\DockingContainerForm.resx">
+      <DependentUpon>DockingContainerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
