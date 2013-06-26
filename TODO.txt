@@ -1,4 +1,0 @@
-Make uxWorkspace resize to fit inside MainForm when it resizes.
-
-Handle the Resize event in DockableForm and make it clamp the form inside the Owner (which is uxWorkspace).
-Also update the anchor points and any child forms of uxWorkspace when it resizes.

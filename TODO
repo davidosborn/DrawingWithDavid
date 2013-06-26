@@ -1,0 +1,19 @@
+When searching for a place to dock for one side, don't consider areas that have
+already been docked to.  Only one form should be able to dock to a region at a
+time.
+
+We can't simply use Rectangle to represent docking regions, as the regions may
+be broken up as specified above.  So we could use orthogonal line-segments
+instead.
+
+When docking, we should never dock if the sides don't intersect with the same
+perpendicular plane (allowing for the snapping offset).
+
+Each dockable form should keep track of who it is docked to on each side.
+It could possibly be docked to more than one form on one side (in the future).
+When a form is moved or resized, all of the forms that are docked to it should update.
+
+Make uxWorkspace resize to fit inside MainForm when it resizes.
+
+Handle the Resize event in DockableForm and make it clamp the form inside the Owner (which is uxWorkspace).
+Also update the anchor points and any child forms of uxWorkspace when it resizes.

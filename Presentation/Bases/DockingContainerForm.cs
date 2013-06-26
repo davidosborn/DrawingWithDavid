@@ -44,10 +44,13 @@ namespace DrawingWithDavid.Presentation
 		{
 			var docks = new List<Rectangle>();
 			
-			// consider the edges of the workspace
+			// consider the outside edges of the main window
+			// FIXME: implement
+
+			// consider the edges of the workspace (the client area)
 			docks.Add(RectangleToScreen(uxWorkspace.Bounds));
 			
-			// consider other docked forms
+			// consider the outside edges of other dockable forms
 			foreach (var dockedForm in dockedForms)
 				docks.Add(new Rectangle(
 					dockedForm.Bounds.Right,
