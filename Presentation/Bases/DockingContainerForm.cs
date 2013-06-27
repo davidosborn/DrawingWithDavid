@@ -12,7 +12,7 @@ namespace DrawingWithDavid.Presentation
 		/**
 		 * 
 		 */
-		private List<DockableForm> dockedForms;
+		private List<DockableForm> dockedForms = new List<DockableForm>();
 
 		/**
 		 * 
@@ -51,12 +51,12 @@ namespace DrawingWithDavid.Presentation
 			docks.Add(RectangleToScreen(uxWorkspace.Bounds));
 			
 			// consider the outside edges of other dockable forms
-			foreach (var dockedForm in dockedForms)
+			/*foreach (var dockedForm in dockedForms)
 				docks.Add(new Rectangle(
 					dockedForm.Bounds.Right,
 					dockedForm.Bounds.Bottom,
 					dockedForm.Bounds.Left,
-					dockedForm.Bounds.Top));
+					dockedForm.Bounds.Top));*/
 
 			var distancePerSide = new int[4]{0, 0, 0, 0};
 
@@ -108,23 +108,35 @@ namespace DrawingWithDavid.Presentation
 				distancePerSide[(int)Side.Bottom] = minDistance;
 			}
 
+			var newBounds = form.Bounds;
 			if (resize)
 			{
-				var newBounds = form.Bounds;
-				newBounds.X      -= distancePerSide[(int)Side.Left];
-				newBounds.Y      -= distancePerSide[(int)Side.Top];
-				newBounds.Width  += distancePerSide[(int)Side.Right];
-				newBounds.Height += distancePerSide[(int)Side.Bottom];
-				form.Bounds = newBounds;
+				distancePerSide[(int)Side.Right] -= distancePerSide[(int)Side.Left];
+				distancePerSide[(int)Side.Bottom] -= distancePerSide[(int)Side.Top];
+
+				if (distancePerSide[(int)Side.Right] != newBounds.Width)
+				{
+					newBounds.X += distancePerSide[(int)Side.Left];
+					newBounds.Width += distancePerSide[(int)Side.Right];
+				}
+				if (distancePerSide[(int)Side.Bottom] != newBounds.Height)
+				{
+					newBounds.Y += distancePerSide[(int)Side.Top];
+					newBounds.Height += distancePerSide[(int)Side.Bottom];
+				}
 			}
 			else
-				form.Bounds.Offset(
+			{
+				newBounds.X += 
 					Math.AbsMinNotZero(
 						distancePerSide[(int)Side.Left],
-						distancePerSide[(int)Side.Right]),
+						distancePerSide[(int)Side.Right]);
+				newBounds.Y += 
 					Math.AbsMinNotZero(
 						distancePerSide[(int)Side.Top],
-						distancePerSide[(int)Side.Bottom]));
+						distancePerSide[(int)Side.Bottom]);
+			}
+			form.Bounds = newBounds;
 		}
 	}
 }

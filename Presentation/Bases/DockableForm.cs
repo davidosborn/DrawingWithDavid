@@ -11,16 +11,26 @@ namespace DrawingWithDavid.Presentation
 	public partial class DockableForm : Form
 	{
 		/**
-		 * The anchors that describe the current docking state.
+		 * The bounding rectangle of the form before it is resized.
+		 * 
+		 * @note This field is only valid when the form is being resized.
 		 */
-		DockAnchors Anchors;
-		//public List<Anchor> Anchors = new List<Anchor>();
+		private Rectangle boundsBeforeResize;
 
-		private Rectangle lastBounds;
+		/**
+		 * A sentry used to prevent the docking code in ResizeEnd event from
+		 * calling itself recursively.
+		 */
+		private bool inResizeEnd = false;
 
-		private SideFlags sidesBeingResized = 0;
+		/**
+		 * The sides of the form that are currently being resized.
+		 * 
+		 * @note This field is only valid when the form is being resized.
+		 */
+		private SideFlags sidesBeingResized = SideFlags.None;
 
-		private bool docking = false;
+////////////////////////////////////////////////////////////////////////////////
 
 		/**
 		 * Constructor.
@@ -31,33 +41,10 @@ namespace DrawingWithDavid.Presentation
 
 			Load += delegate
 			{
-				this.Move += new System.EventHandler(DockableForm_Move);
-				this.Resize += new System.EventHandler(DockableForm_Resize);
-				this.ResizeBegin += new System.EventHandler(DockableForm_ResizeBegin);
-				this.ResizeEnd   += new System.EventHandler(DockableForm_ResizeEnd);
+				this.Resize      += DockableForm_Resize;
+				this.ResizeBegin += DockableForm_ResizeBegin;
+				this.ResizeEnd   += DockableForm_ResizeEnd;
 			};
-			
-			/**
-			 * Bind events for updating the docking.
-			 */
-			/*Move += delegate
-			{
-				if (Owner == null) return;
-				DockingContainerForm parent = ((DockingContainerForm)Owner);
-				parent.TryToDock(this);
-			};
-			ResizeBegin += delegate
-			{
-				// determine which side(s) of the form are being resized
-
-
-			};
-			Resize += delegate
-			{
-				if (Owner == null) return;
-				DockingContainerForm parent = ((DockingContainerForm)Owner);
-				parent.TryToDock(this);
-			};*/
 		}
 
 		/**
@@ -72,58 +59,41 @@ namespace DrawingWithDavid.Presentation
 		}
 
 		/**
-		 * Update the form's position and size to match the forms that it is
-		 * anchored to.
+		 * Returns the DockingContainer that contains this form.
 		 */
-		public void RepositionToAnchors()
-		{
-			/*bool
-				stretchHorizontally =
-					Anchors.TopLeft    != null && Anchors.TopRight    != null ||
-					Anchors.BottomLeft != null && Anchors.BottomRight != null,
-				stretchVertically =
-					Anchors.TopLeft  != null && Anchors.BottomLeft  != null ||
-					Anchors.TopRight != null && Anchors.BottomRight != null;*/
-
-		}
-
 		public DockingContainerForm DockingContainer {
 			get { return (DockingContainerForm)Owner; }}
 
-		private void DockableForm_Move(object sender, EventArgs e)
-		{
-			if (!docking)
-			{
-				docking = true;
-				DockingContainer.TryToDock(this, SideFlags.All, false);
-				docking = false;
-			}
-		}
+////////////////////////////////////////////////////////////////////////////////
 
 		private void DockableForm_Resize(object sender, EventArgs e)
 		{
 			// determine which sides of the form are being resized
 			if (sidesBeingResized == 0)
 				sidesBeingResized =
-					(Bounds.Left   != lastBounds.Left   ? SideFlags.Left   : 0) |
-					(Bounds.Top    != lastBounds.Top    ? SideFlags.Top    : 0) |
-					(Bounds.Right  != lastBounds.Right  ? SideFlags.Right  : 0) |
-					(Bounds.Bottom != lastBounds.Bottom ? SideFlags.Bottom : 0);
+					(Bounds.Left   != boundsBeforeResize.Left   ? SideFlags.Left   : 0) |
+					(Bounds.Top    != boundsBeforeResize.Top    ? SideFlags.Top    : 0) |
+					(Bounds.Right  != boundsBeforeResize.Right  ? SideFlags.Right  : 0) |
+					(Bounds.Bottom != boundsBeforeResize.Bottom ? SideFlags.Bottom : 0);
 		}
 
 		private void DockableForm_ResizeBegin(object sender, EventArgs e)
 		{
-			sidesBeingResized = 0;
-			lastBounds = Bounds;
+			sidesBeingResized = SideFlags.None;
+			boundsBeforeResize = Bounds;
 		}
 
 		private void DockableForm_ResizeEnd(object sender, EventArgs e)
 		{
-			if (!docking)
+			if (!inResizeEnd)
 			{
-				docking = true;
-				DockingContainer.TryToDock(this, sidesBeingResized, true);
-				docking = false;
+				inResizeEnd = true;
+				
+				if (sidesBeingResized == SideFlags.None)
+					DockingContainer.TryToDock(this, sidesBeingResized, true);
+				else DockingContainer.TryToDock(this, SideFlags.All, false);
+
+				inResizeEnd = false;
 			}
 		}
 	}
