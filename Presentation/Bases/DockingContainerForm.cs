@@ -15,11 +15,6 @@ namespace DrawingWithDavid.Presentation
 		private List<DockableForm> dockedForms = new List<DockableForm>();
 
 		/**
-		 * 
-		 */
-		private List<Point> anchors;
-
-		/**
 		 * Constructor.
 		 */
 		public DockingContainerForm()

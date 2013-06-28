@@ -53,8 +53,8 @@ namespace DrawingWithDavid.Presentation
 		public List<Form> GetDependencies()
 		{
 			List<Form> dependencies = new List<Form>();
-			foreach (DockAnchor anchor in Anchors)
-				dependencies.Add(anchor.TargetForm);
+			/*foreach (DockAnchor anchor in Anchors)
+				dependencies.Add(anchor.TargetForm);*/
 			return dependencies;
 		}
 
@@ -89,7 +89,7 @@ namespace DrawingWithDavid.Presentation
 			{
 				inResizeEnd = true;
 				
-				if (sidesBeingResized == SideFlags.None)
+				if (sidesBeingResized != SideFlags.None)
 					DockingContainer.TryToDock(this, sidesBeingResized, true);
 				else DockingContainer.TryToDock(this, SideFlags.All, false);
 
