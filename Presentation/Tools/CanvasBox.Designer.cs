@@ -28,13 +28,15 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.uxPicture = new CanvasControl();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CanvasBox));
+			this.uxPicture = new DrawingWithDavid.Presentation.CanvasControl();
 			((System.ComponentModel.ISupportInitialize)(this.uxPicture)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// uxPicture
 			// 
 			this.uxPicture.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.uxPicture.Image = ((System.Drawing.Image)(resources.GetObject("uxPicture.Image")));
 			this.uxPicture.Location = new System.Drawing.Point(0, 0);
 			this.uxPicture.Name = "uxPicture";
 			this.uxPicture.Size = new System.Drawing.Size(292, 276);
@@ -56,6 +58,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.PictureBox uxPicture;
+		private CanvasControl uxPicture;
+
 	}
 }
