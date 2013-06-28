@@ -26,6 +26,13 @@ namespace DrawingWithDavid.Presentation
 
 ////////////////////////////////////////////////////////////////////////////////
 
+		public void SetStatus(string s)
+		{
+			uxStatus.Text = s;
+		}
+
+////////////////////////////////////////////////////////////////////////////////
+
 		/**
 		 * Resize workspace to fill client rectangle.
 		 */
@@ -42,6 +49,7 @@ namespace DrawingWithDavid.Presentation
 
 		private void MainWindow_Load(object sender, EventArgs e)
 		{
+			ShowToolForm<CanvasBox>();
 			ShowToolForm<ColorStateBox>();
 		}
 

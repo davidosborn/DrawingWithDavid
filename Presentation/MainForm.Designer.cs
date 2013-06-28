@@ -182,7 +182,10 @@
 			this.MainMenuStrip = this.uxMenuStrip;
 			this.Name = "MainForm";
 			this.Text = "Drawing with David";
+			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.Load += new System.EventHandler(this.MainWindow_Load);
+			this.Controls.SetChildIndex(this.uxMenuStrip, 0);
+			this.Controls.SetChildIndex(this.uxStatusStrip, 0);
 			this.uxMenuStrip.ResumeLayout(false);
 			this.uxMenuStrip.PerformLayout();
 			this.uxStatusStrip.ResumeLayout(false);

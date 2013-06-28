@@ -58,11 +58,19 @@ namespace DrawingWithDavid.Presentation
 			return dependencies;
 		}
 
+////////////////////////////////////////////////////////////////////////////////
+
 		/**
 		 * Returns the DockingContainer that contains this form.
 		 */
 		public DockingContainerForm DockingContainer {
 			get { return (DockingContainerForm)Owner; }}
+
+		/**
+		 * Returns the MainForm the contains this form.
+		 */
+		public MainForm MainForm {
+			get { return (MainForm)Owner; }}
 
 ////////////////////////////////////////////////////////////////////////////////
 

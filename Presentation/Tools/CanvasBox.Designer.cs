@@ -28,21 +28,34 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.uxPicture = new CanvasControl();
+			((System.ComponentModel.ISupportInitialize)(this.uxPicture)).BeginInit();
 			this.SuspendLayout();
+			// 
+			// uxPicture
+			// 
+			this.uxPicture.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.uxPicture.Location = new System.Drawing.Point(0, 0);
+			this.uxPicture.Name = "uxPicture";
+			this.uxPicture.Size = new System.Drawing.Size(292, 276);
+			this.uxPicture.TabIndex = 0;
+			this.uxPicture.TabStop = false;
 			// 
 			// CanvasBox
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.Black;
-			this.ClientSize = new System.Drawing.Size(292, 273);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+			this.ClientSize = new System.Drawing.Size(292, 276);
+			this.Controls.Add(this.uxPicture);
 			this.Name = "CanvasBox";
 			this.Text = "Canvas";
+			((System.ComponentModel.ISupportInitialize)(this.uxPicture)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
+
+		private System.Windows.Forms.PictureBox uxPicture;
 	}
 }
