@@ -1,9 +1,7 @@
-﻿using System.Drawing;
-
-namespace State
+﻿namespace DrawingWithDavid.State
 {
-    public class State
-    {
-		public static Color foregroundColor;
-    }
+	public static class State
+	{
+		public static Brush Brush = new Brush();
+	}
 }

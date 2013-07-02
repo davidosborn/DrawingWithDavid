@@ -1,10 +1,18 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+
+using DrawingWithDavid.State;
 
 namespace DrawingWithDavid.Presentation
 {
 	public class CanvasControl : PictureBox
 	{
+		private Bitmap backgroundBitmap;
+
+		private Point strokeStartingPoint;
+		private State.Brush strokeBrush;
+
 		private Point lastMousePosition;
 
 		public CanvasControl()
@@ -14,38 +22,31 @@ namespace DrawingWithDavid.Presentation
 
 ////////////////////////////////////////////////////////////////////////////////
 
-		private static void DrawStroke(Graphics g, Point a, Point b, float radius)
+		private void DrawStroke(Graphics g, Point a, Point b)
 		{
-			var pen = new Pen(Color.Green, 1 + radius * 2);
-			var brush = new SolidBrush(Color.Green);
-			g.DrawLine(pen, a, b);
-			g.FillEllipse(brush,
-				a.X - radius,
-				a.Y - radius,
-				1 + radius * 2,
-				1 + radius * 2);
-			g.FillEllipse(brush,
-				b.X - radius,
-				b.Y - radius,
-				1 + radius * 2,
-				1 + radius * 2);
+			g.DrawLine(State.State.Brush.Pen, a, b);
 		}
 
 ////////////////////////////////////////////////////////////////////////////////
 
+		protected override void OnMouseDown(MouseEventArgs e)
+		{
+			State.State.Brush.Origin = e.Location;
+			
+			base.OnMouseDown(e);
+		}
+
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			var diff = Point.Subtract(e.Location, new Size(lastMousePosition));
-			var maxDiff = System.Math.Max(
-				System.Math.Abs(diff.X),
-				System.Math.Abs(diff.Y));
-			if (maxDiff > 10)
+			var distance = System.Math.Sqrt(diff.X * diff.X + diff.Y * diff.Y);
+			if (distance >= State.State.Brush.Step)
 			{
 				if (MouseButtons.HasFlag(MouseButtons.Left))
 				{
 					using (var g = Graphics.FromImage(Image))
 					{
-						DrawStroke(g, lastMousePosition,e.Location, 10);
+						DrawStroke(g, lastMousePosition,e.Location);
 					}
 					Refresh();
 				}
@@ -58,15 +59,27 @@ namespace DrawingWithDavid.Presentation
 
 		protected override void OnPaintBackground(System.Windows.Forms.PaintEventArgs e)
 		{
-			var brushes = new Brush[]{
-				new SolidBrush(Color.LightGray),
-				new SolidBrush(Color.White)};
+			e.Graphics.DrawImage(backgroundBitmap, 0, 0);
+		}
 
-			const int step = 16;
-			for (int i = 0; i < ClientSize.Width; i += step)
-				for (int j = 0; j < ClientSize.Height; j += step)
-					e.Graphics.FillRectangle(brushes[(i + j) / step % 2],
-						new Rectangle(i, j, i + step - 1, j + step - 1));
+		protected override void OnResize(System.EventArgs e)
+		{
+			// render checkerboard pattern to bitmap for background
+			backgroundBitmap = new Bitmap(ClientSize.Width, ClientSize.Height);
+			using (var g = Graphics.FromImage(backgroundBitmap))
+			{
+				var brushes = new System.Drawing.Brush[]{
+					new SolidBrush(Color.LightGray),
+					new SolidBrush(Color.White)};
+
+				const int step = 16;
+				for (int i = 0; i < ClientSize.Width; i += step)
+					for (int j = 0; j < ClientSize.Height; j += step)
+						g.FillRectangle(brushes[(i + j) / step % 2],
+							new Rectangle(i, j, i + step - 1, j + step - 1));
+			}
+
+			base.OnResize(e);
 		}
 	}
 }
